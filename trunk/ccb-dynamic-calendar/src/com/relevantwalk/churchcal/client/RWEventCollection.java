@@ -23,9 +23,9 @@ import com.google.gwt.xml.client.XMLParser;
  */
 interface RWCalendarDataListener extends java.util.EventListener
 {
-    void onDataInit(RWEventCollection returnedEvents);
-    void onDataError(String errMsg);
-    //void onEventAdd (could be super interesting when Google Wave comes out)
+	void onDataInit(RWEventCollection returnedEvents);
+	void onDataError(String errMsg);
+	//void onEventAdd (could be super interesting when Google Wave comes out)
 }
 
 class RWEventCollection  {
@@ -39,7 +39,7 @@ class RWEventCollection  {
 		addCalendarDataListener(dataListener);
 		fetchXML();
 	}
-	
+
 	public ArrayList<RWEventItem> allEvents(){
 		return eventList;
 	}
@@ -91,16 +91,16 @@ class RWEventCollection  {
 	}
 
 	public void addCalendarDataListener(RWCalendarDataListener listener)
-    {
-        listeners.add(listener);
-    }
+	{
+		listeners.add(listener);
+	}
 
-    public void removeCalendarDataListener(RWCalendarDataListener listener)
-    {
-        listeners.remove(listener);
-    }
+	public void removeCalendarDataListener(RWCalendarDataListener listener)
+	{
+		listeners.remove(listener);
+	}
 
-    /**
+	/**
 	 * Class for handling the response XML
 	 */
 	private class ResponseTextHandler implements RequestCallback {

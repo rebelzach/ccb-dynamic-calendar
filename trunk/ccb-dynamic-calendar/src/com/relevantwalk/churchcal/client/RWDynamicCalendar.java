@@ -27,7 +27,7 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 		endDate.setDate(daysInMonth(endDate));
 		calendarEvents = new RWEventCollection(startDate,endDate,this);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private int daysInMonth(Date inputDate) {
 		Date testDate = new Date(inputDate.getTime());
@@ -88,7 +88,7 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 			if (currentDate > dayCount){  
 				calendarTable.setWidget(currentRow, currentCol, new Label(Integer.toString(currentDate - dayCount)));
 				calendarTable.getFlexCellFormatter().setStyleName(currentRow, currentCol, "cal-table-cell");
-				}
+			}
 
 			if (currentDate >= dayCount && currentCol == 6 ){
 				//for now we are done evacuate!
@@ -117,7 +117,7 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 	@Override
 	public void onDataError(String errMsg) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }
