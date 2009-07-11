@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ccb_api>
+<request>
+	<parameters>
+		<argument name="srv" value="public_calendar_listing" />
+		<argument name="date_start" value="2009-01-23" />
+		<argument name="date_end" value="2009-06-23" />
+	</parameters>
+</request>
+<response>
+<service>public_calendar_listing</service>
+
+<service_action>execute</service_action>
+<availability>public</availability>
+	<items count="16">
+		<item>
+			<date>2009-03-29</date>
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-04-05</date>
+
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-04-12</date>
+			<event_name ccb_id="6">Easter Egg Scramble</event_name>
+			<event_description>Attention all kids aged 1 thru 5th grade...we are having an Easter Egg
+Scramble, Easter Sunday at 11:30 AM on the front lawn of the school.</event_description>
+			<start_time>11:30:00</start_time>
+
+			<end_time>12:30:00</end_time>
+			<event_duration>60</event_duration>
+			<event_type>Open To All</event_type>
+			<location>Grandview Front Lawn</location>
+			<group_name ccb_id="1">Entire Church Group</group_name>
+			<group_type>Care / Small Group</group_type>
+
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-04-12</date>
+
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-04-19</date>
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-04-26</date>
+
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-04-30</date>
+			<event_name ccb_id="7">Women&#039;s Dessert Social</event_name>
+			<event_description>Forget your cares with a light hearted evening of fun and games...and of course delicious desserts.</event_description>
+
+			<start_time>19:00:00</start_time>
+			<end_time>21:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Registration Required</event_type>
+			<location>Creekside Classroom</location>
+			<group_name ccb_id="1">Entire Church Group</group_name>
+
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1542">Marlene Gibson</leader_name>
+			<leader_phone>(303) 766-4333 </leader_phone>
+			<leader_email>mgibson@creeksidechurch.org</leader_email>
+		</item>
+		<item>
+
+			<date>2009-05-03</date>
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-05-07</date>
+			<event_name ccb_id="11">National Day of Prayer</event_name>
+			<event_description>Meet for worship and cover our nation in prayer</event_description>
+
+			<start_time>19:00:00</start_time>
+			<end_time>21:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="17">Prayer Team</group_name>
+
+			<group_type>Task / Action</group_type>
+			<grouping_name>Ministry Team</grouping_name>
+			<leader_name ccb_id="1423">Anne Waters</leader_name>
+			<leader_phone>(303) 693-7254 </leader_phone>
+			<leader_email>anne.waters@wmei.com</leader_email>
+		</item>
+
+		<item>
+			<date>2009-05-10</date>
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-05-17</date>
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+
+			<date>2009-05-24</date>
+			<event_name ccb_id="2">MS Youth Group</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-06-09</date>
+			<event_name ccb_id="15">Trinity Service Project TBA</event_name>
+
+			<event_description></event_description>
+			<start_time>18:15:00</start_time>
+			<end_time>20:45:00</end_time>
+			<event_duration>150</event_duration>
+			<event_type>Open To All</event_type>
+			<location></location>
+			<group_name ccb_id="7">Youth Group</group_name>
+
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+
+			<date>2009-06-10</date>
+			<event_name ccb_id="16">Whiffle ball tourney Begins</event_name>
+			<event_description></event_description>
+			<start_time>18:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>120</event_duration>
+
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-06-16</date>
+			<event_name ccb_id="17">Youth Night</event_name>
+			<event_description>Accountability Week
+Wiffle Ball</event_description>
+
+			<start_time>17:00:00</start_time>
+			<end_time>20:00:00</end_time>
+			<event_duration>180</event_duration>
+			<event_type>Open To All</event_type>
+			<location>Ministry Center</location>
+			<group_name ccb_id="7">Youth Group</group_name>
+
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+
+			<date>2009-06-23</date>
+			<event_name ccb_id="14">Women&#039;s Dessert Social</event_name>
+			<event_description>This is our last social before we break for summer! Join us for a great time of fellowship and worship. We will be meeting at Julie Perry&#039;s home, Sorry, no child care will be available. Please RSVP to Marlene at mgibson@creeksidechurch.org or call 303-766-4333.</event_description>
+			<start_time>19:00:00</start_time>
+			<end_time>21:00:00</end_time>
+
+			<event_duration>120</event_duration>
+			<event_type>Open To All</event_type>
+			<location>Julie Perry&#039;s home</location>
+			<group_name ccb_id="19">Women of Creekside</group_name>
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+
+			<leader_name ccb_id="1492">Robette Brooks</leader_name>
+			<leader_phone>(303) 699-8859 </leader_phone>
+			<leader_email></leader_email>
+		</item>
+	</items>
+</response>
+</ccb_api>
+
+
