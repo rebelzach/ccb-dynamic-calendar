@@ -5,11 +5,11 @@ import java.util.Date;
 class RWEventItem {
 	private String eventName;
 	private Date eventDate;
-	
+
 	public RWEventItem() {
 		this.eventName = "";	
 	}
-	
+
 	public RWEventItem(String eventName, Date eventDate) {
 		this.eventName = eventName;
 		this.eventDate = eventDate;	

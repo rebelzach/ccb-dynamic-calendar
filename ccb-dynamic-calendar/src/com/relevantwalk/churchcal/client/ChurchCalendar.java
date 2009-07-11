@@ -8,10 +8,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class ChurchCalendar implements EntryPoint {
-	
+
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private RWDynamicCalendar dynamicCalendar;
-	
+
 	/**
 	 * This is the entry point method.
 	 */
@@ -21,7 +21,7 @@ public class ChurchCalendar implements EntryPoint {
 		//String groupArg = Window.Location.getParameter("group"); 
 		dynamicCalendar = new RWDynamicCalendar();
 		mainPanel.add(dynamicCalendar);
-		
+
 		// Associate the Main panel with the HTML host page.
 		RootPanel.get().add(mainPanel);
 	}	
