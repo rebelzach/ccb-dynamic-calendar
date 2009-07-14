@@ -26,15 +26,33 @@ import com.google.gwt.xml.client.XMLParser;
 class RWEventCollection  {
 	private ArrayList<RWCalendarDataListener> listeners = new ArrayList<RWCalendarDataListener>();
 	private ArrayList<RWEventItem> eventList = new ArrayList<RWEventItem>();
+	private Date rangeStart;
+	private Date rangeEnd;
 	/*
 	 * It is possible to add multiple listeners to this class though
 	 * currently the Calendar widgets call their own EventCollections separately.
 	 */
 	public RWEventCollection(Date rangeStart, Date rangeEnd, RWCalendarDataListener dataListener){
 		addCalendarDataListener(dataListener);
+		this.rangeStart = rangeStart;
+		this.rangeEnd = rangeEnd;
 		fetchXML(rangeStart,rangeEnd);
 	}
 	
+	/**
+	 * @return the rangeStart
+	 */
+	public Date getRangeStart() {
+		return rangeStart;
+	}
+
+	/**
+	 * @return the rangeEnd
+	 */
+	public Date getRangeEnd() {
+		return rangeEnd;
+	}
+
 	public ArrayList<RWEventItem> allEvents(){
 		return eventList;
 	}
