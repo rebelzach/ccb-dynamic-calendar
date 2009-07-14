@@ -8,6 +8,9 @@ import java.lang.Math;
 
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
@@ -27,6 +30,22 @@ interface RWCalendarDataListener extends java.util.EventListener
 class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 {
 	private FlexTable calendarTable = new FlexTable();
+	private VerticalPanel mainPanel = new VerticalPanel();
+	private HorizontalPanel navPanel= new HorizontalPanel();
+	private Button prevMonthButton = new Button("Prev",
+			new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					goToPrevMonth();
+				}
+			});
+	private Button nextMonthButton = new Button("Next", 
+			new ClickHandler() {
+				public void onClick(ClickEvent event) {
+					goToNextMonth();
+				}
+			});
+	private Label monthTitle = new Label();
+	
 	@SuppressWarnings("unused")
 	private RWEventCollection calendarEvents;
 	private int currentYear;
@@ -34,31 +53,119 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 	private int firstDayofMonth; //the "Day" of the 1st
 	private int dayCount;
 	private int previousMonthDayCount;
-
+	private Date firstDate;
+	private Date endDate;
+	
 	/*
-	 * initializeCalendar Creates a flex table for the current month.
+	 * initializeCalendar Creates a flextable for the current month.
 	 * TODO:Account for weeks that start on Monday
 	 */
 	@SuppressWarnings("deprecation")
 	public RWDynamicCalendar() {
-		initWidget(calendarTable);
+		initWidget(mainPanel);
+		navPanel.add(monthTitle);
+		navPanel.add(prevMonthButton);
+		navPanel.add(nextMonthButton);
+		mainPanel.add(navPanel);
+		mainPanel.add(calendarTable);
+		
 		Date today = new Date();
+		buildCalendar(today.getMonth(),today.getYear());
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void buildCalendar(int month, int year){
+		Date dayInMonth = new Date(year,month,1);
+		int currentCol = 0;
+		int currentRow = 0;
 		
 		//These are set right off the bat for speed purposes, they are accessed frequently
-		firstDayofMonth = dayofFirst(today);
-		dayCount = daysInMonth(today);
-		previousMonthDayCount = daysInPreviousMonth(today);
-		currentMonth = today.getMonth();
-		currentYear = today.getYear();
-		
+		firstDayofMonth = dayofFirst(dayInMonth);
+		dayCount = daysInMonth(dayInMonth);
+		previousMonthDayCount = daysInPreviousMonth(dayInMonth);
+		currentMonth = month;
+		currentYear = year;
+		monthTitle.setText(getMonthName(currentMonth) + " " + (currentYear + 1900));
+
 		//this gets the coordinates for the size of the table
 		int endCoordRow = (int) Math.ceil((firstDayofMonth + dayCount)/7.0);
 		int endCoordCol = 6;
+		firstDate = gridCoordtoDate(0,0);
+		endDate = gridCoordtoDate(endCoordCol, endCoordRow);
+		int maxCells = (int) (Math.ceil((firstDayofMonth + dayCount)/7.0))*7;
+		int rowCount = calendarTable.getRowCount();
 		
-		calendarEvents = new RWEventCollection(gridCoordtoDate(0,0),gridCoordtoDate(endCoordCol, endCoordRow),this);
+		if (!(rowCount == 0)){
+			for (int i = 0; i < rowCount; i++){	
+				calendarTable.removeRow(0);
+			}
+		}
+		
+		for(int i = 1;i <= maxCells;i++) { 
+			Date currentDate = gridCoordtoDate(currentCol,currentRow);
+			calendarTable.setWidget(currentRow, currentCol, new DayPanel(
+					currentDate.getDate(),
+					(currentDate.getMonth() == currentMonth)));
+			//calendarTable.getFlexCellFormatter().setStyleName(currentRow, currentCol, "cal-table-cell");
+
+			//If its Saturday go to Sunday of next week
+			if (currentCol == 6){
+				currentCol = 0;
+				currentRow++;
+			} else {
+				// If its not Saturday move to the next day
+				currentCol++;
+			}
+		}
+		calendarEvents = new RWEventCollection(firstDate,endDate,this);
 	}
 	
+	private void goToNextMonth() {
+		int month;
+		int year;	
+		if (currentMonth == 11){
+			month = 0;
+			year = currentYear + 1;
+		} else {
+			month = currentMonth + 1;
+			year = currentYear;
+		}
+		buildCalendar(month,year);
+	}
 	
+	private void goToPrevMonth() {
+		int month;
+		int year;
+		
+		if (currentMonth == 0){
+			month = 11;
+			year = currentYear - 1;
+		} else {
+			month = currentMonth - 1;
+			year = currentYear;
+		}
+		buildCalendar(month,year);
+	}
+	
+	private String getMonthName(int month){
+		String monthName;
+		switch (month) {
+	        case 0:  monthName = "January"; break;
+	        case 1:  monthName = "February"; break;
+	        case 2:  monthName = "March"; break;
+	        case 3:  monthName = "April"; break;
+	        case 4:  monthName = "May"; break;
+	        case 5:  monthName = "June"; break;
+	        case 6:  monthName = "July"; break;
+	        case 7:  monthName = "August"; break;
+	        case 8:  monthName = "September"; break;
+	        case 9:  monthName = "October"; break;
+	        case 10: monthName = "November"; break;
+	        case 11: monthName = "December"; break;
+	        default: monthName = "Invalid month.";break;
+		}
+		return monthName;
+	}
 
 	/**
 	 * @return the currentYear
@@ -115,35 +222,20 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 		int dayofWeek = testDate.getDay();
 		return dayofWeek;
 	}
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public void onDataInit(RWEventCollection returnedEvents) {
-		int currentCol = 0;
-		int currentRow = 0;
-		int maxCells = (int) (Math.ceil((firstDayofMonth + dayCount)/7.0))*7;
-		for(int i = 1;i <= maxCells;i++) { 
-			Date currentDate = gridCoordtoDate(currentCol,currentRow);
-			calendarTable.setWidget(currentRow, currentCol, new DayPanel(
-					currentDate.getDate(),
-					(currentDate.getMonth() == currentMonth)));
-			//calendarTable.getFlexCellFormatter().setStyleName(currentRow, currentCol, "cal-table-cell");
-
-			//If its Saturday go to Sunday of next week
-			if (currentCol == 6){
-				currentCol = 0;
-				currentRow++;
-			} else {
-				// If its not Saturday move to the next day
-				currentCol++;
-			}
-		}
+		
 		
 		ArrayList<RWEventItem> eventList = returnedEvents.allEvents();
 		for(Iterator<RWEventItem> it = eventList.iterator(); it.hasNext();)
 		{
 			RWEventItem item = (RWEventItem) it.next();
-			RWGridCoord widgetPosition = dateToGridCoords(item.getEventDate());
-			((DayPanel) calendarTable.getWidget(widgetPosition.getY(),widgetPosition.getX())).addEvent(item);
+			if (!(item.getEventDate().before(firstDate) || item.getEventDate().after(endDate))){
+				RWGridCoord widgetPosition = dateToGridCoords(item.getEventDate());
+				
+				((DayPanel) calendarTable.getWidget(widgetPosition.getY(),widgetPosition.getX())).addEvent(item);
+			}
 		}
 		
 	}
@@ -154,7 +246,7 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 	@SuppressWarnings("deprecation")
 	private Date gridCoordtoDate(int col, int row){
 		//a formula for deciding whether we are in the current month
-		int currentIndex = (row * 7 + col) - firstDayofMonth + 2;
+		int currentIndex = (row * 7 + col) - firstDayofMonth + 1;
 		Date returnDate = new Date(currentYear,currentMonth,1);
 		
 		//Logic to decide what the date is.
@@ -182,26 +274,28 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 		int column = 0;
 		int row = 0;
 		int gridCount = 0;
+		
 		if (currentMonth == date.getMonth()){
-			gridCount = date.getDate() + firstDayofMonth -1;
+			
+			gridCount = date.getDate() + firstDayofMonth;
 			column = (gridCount%7)-1;
 			row = (int) Math.floor(gridCount/7);
 			if (column == -1){ 
 				column = 6;
 				row--;
 			}
-			
-
-		} else if ((currentMonth -1)== date.getMonth()){
-			gridCount = (firstDayofMonth-1) - (date.getDate()-previousMonthDayCount);
+		} else if ((currentMonth - 1) == date.getMonth()){
+			gridCount = (firstDayofMonth - 1) + (date.getDate()-previousMonthDayCount);
 			if (gridCount >= 0){
-			gridCoord.setX(gridCount);
-			gridCoord.setY(0);
+				
+			column = gridCount;
+			row = 0;
 			} else {
+				
 				//TODO This should throw an out of range exception
 			}
-		} else if ((currentMonth+1) == date.getMonth()){
-			gridCount = firstDayofMonth -1  + dayCount + date.getDate();
+		} else if ((currentMonth + 1) == date.getMonth()){
+			gridCount = firstDayofMonth  + dayCount + date.getDate();
 			column = (gridCount%7)-1;
 			row = (int) Math.floor(gridCount/7);
 			if (column == -1){ 
