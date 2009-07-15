@@ -23,7 +23,7 @@ import com.google.gwt.xml.client.XMLParser;
  * It simply asks for the XML with an asynchronous HTTP request
  * To use this class you must add a listener to know when the data has been retrieved
  */
-class RWEventCollection  {
+public class RWEventCollection  {
 	private ArrayList<RWCalendarDataListener> listeners = new ArrayList<RWCalendarDataListener>();
 	private ArrayList<RWEventItem> eventList = new ArrayList<RWEventItem>();
 	private Date rangeStart;
@@ -63,7 +63,7 @@ class RWEventCollection  {
 		for(Iterator<RWEventItem> it = eventList.iterator(); it.hasNext();)
 		{
 			RWEventItem event = (RWEventItem) it.next();
-			event.getEventDate();
+			event.getEventStartDate();
 		}
 		return events;
 	}
@@ -78,15 +78,115 @@ class RWEventCollection  {
 		NodeList events = calendarElement.getElementsByTagName("item");
 
 		for (int i = 0; i < events.getLength(); i++) {
+			//This loop is HUGE, lazy loading of data is probably in order...
 			Element event = (Element) events.item(i);
-			RWEventItem eventItem = new RWEventItem();
-			eventItem.setEventName(getElementTextValue(event, "event_name"));
-			String dateStr = getElementTextValue(event, "date");
+			//EVENT Name
+			String eventName;
+			try {
+				eventName = getElementTextValue(event, "event_name");
+			} catch (Exception e) {
+				continue; //An event without a name! Get out now!
+			}
+			
+			//EVENT Date
+			String dateStr;
+			Date eventStartDate;
+			try {
+				dateStr = getElementTextValue(event, "date");
+			} catch (Exception e) {
+				continue; //An event without a date! Get out now!
+			}
 			int eventYear = Integer.parseInt(dateStr.substring(0, 4));
 			eventYear = eventYear - 1900;
 			int eventMonth = Integer.parseInt(dateStr.substring(5, 7))-1;
 			int eventDate = Integer.parseInt(dateStr.substring(8, 10));
-			eventItem.setEventDate(new Date(eventYear,eventMonth,eventDate));
+			eventStartDate = new Date(eventYear,eventMonth,eventDate);
+			
+			//EVENT Description
+			String eventDescription;
+			try {
+				eventDescription = getElementTextValue(event, "event_description");
+			}catch (Exception e) {
+				eventDescription = "";
+			}
+			
+			//EVENT Start Time
+			String startTimeStr;
+			try {
+				startTimeStr = getElementTextValue(event, "start_time");
+			}catch (Exception e) {
+				startTimeStr = "00:00:00";
+			}
+			int startEventHours = Integer.parseInt(startTimeStr.substring(0, 2));
+			int startEventMinutes = Integer.parseInt(startTimeStr.substring(3, 5));
+			int startEventSeconds = Integer.parseInt(startTimeStr.substring(6, 8));
+			eventStartDate.setHours(startEventHours);
+			eventStartDate.setMinutes(startEventMinutes);
+			eventStartDate.setSeconds(startEventSeconds);
+			
+			//EVENT End Time
+			String endTimeStr;
+			Date eventEndDate;
+			try {
+				endTimeStr = getElementTextValue(event, "end_time");
+			}catch (Exception e) {
+				endTimeStr = "00:00:00";
+			}
+			int endEventHours = Integer.parseInt(endTimeStr.substring(0, 2));
+			int endEventMinutes = Integer.parseInt(endTimeStr.substring(3, 5));
+			int endEventSeconds = Integer.parseInt(endTimeStr.substring(6, 8));
+			eventEndDate = new Date(eventYear,eventMonth,eventDate);
+			eventEndDate.setHours(endEventHours);
+			eventEndDate.setMinutes(endEventMinutes);
+			eventEndDate.setSeconds(endEventSeconds);
+
+			//EVENT All Day Event
+			boolean isAllDayEvent;
+			if (startTimeStr == "00:00:00" && endTimeStr == "23:59:00"){
+				isAllDayEvent = true;
+			} else {
+				isAllDayEvent = false;
+			}
+			
+			//EVENT Type Registration Required or Open To All
+			String eventType;
+			try {
+				eventType = getElementTextValue(event, "event_type");
+			}catch (Exception e) {
+				eventType = "";
+			}
+		
+			//EVENT location
+			String eventLocation;
+			try {
+				eventLocation = getElementTextValue(event, "location");
+			}catch (Exception e) {
+				eventLocation = "";
+			}
+		
+			//EVENT group name
+			String eventGroupName;
+			try {
+				eventGroupName = getElementTextValue(event, "group_name");
+			}catch (Exception e) {
+				eventGroupName = "";
+			}
+			
+			//EVENT group id //TODO This needs to be implemented
+			
+			//EVENT group_type //TODO Does this need to be implemented?
+			
+			//This could probably be rolled into a constructor
+
+			RWEventItem eventItem = new RWEventItem();
+			eventItem.setEventName(eventName);
+			eventItem.setEventStartDate(eventStartDate);
+			eventItem.setEventEndDate(eventEndDate);
+			eventItem.setEventDescription(eventDescription);
+			eventItem.setIsAllDayEvent(isAllDayEvent);
+			eventItem.setEventType(eventType);
+			eventItem.setEventLocation(eventLocation);
+			eventItem.setEventGroupName(eventGroupName);
 			eventList.add(eventItem);
 		}
 		

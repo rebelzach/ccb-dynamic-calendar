@@ -27,7 +27,7 @@ interface RWCalendarDataListener extends java.util.EventListener
 	//void onEventAdd (could be super interesting for a dynamically updated calendar)
 }
 
-class RWDynamicCalendar extends Composite implements RWCalendarDataListener
+public class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 {
 	private FlexTable calendarTable = new FlexTable();
 	private VerticalPanel mainPanel = new VerticalPanel();
@@ -55,6 +55,7 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 	private int previousMonthDayCount;
 	private Date firstDate;
 	private Date endDate;
+	private RWDynamicCalendarDetailHelper detailHelper = new RWDynamicCalendarDetailHelper();
 	
 	/*
 	 * initializeCalendar Creates a flextable for the current month.
@@ -231,8 +232,8 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 		for(Iterator<RWEventItem> it = eventList.iterator(); it.hasNext();)
 		{
 			RWEventItem item = (RWEventItem) it.next();
-			if (!(item.getEventDate().before(firstDate) || item.getEventDate().after(endDate))){
-				RWGridCoord widgetPosition = dateToGridCoords(item.getEventDate());
+			if (!(item.getEventStartDate().before(firstDate) || item.getEventStartDate().after(endDate))){
+				RWGridCoord widgetPosition = dateToGridCoords(item.getEventStartDate());
 				
 				((DayPanel) calendarTable.getWidget(widgetPosition.getY(),widgetPosition.getX())).addEvent(item);
 			}
@@ -396,7 +397,7 @@ class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 		 * public so that if you ever want to add events dynamically...
 		 */
 		public void addEvent(RWEventItem eventItem){
-				eventsPanel.add(new Label(eventItem.getEventName()));	
+				eventsPanel.add(new RWEventLink(eventItem, detailHelper));	
 		}
 		
 		/*
