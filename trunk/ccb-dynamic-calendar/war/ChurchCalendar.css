@@ -1,38 +1,64 @@
-/** Add css rules here for your application. */
-
-
-/** Example rules used by the template application (remove for your app) */
-h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+body {
+	overflow:hidden;
 }
 
-.cal-table-cell {
-	color:red;
+.rwdc-header {
+	border-style: solid;
+	border-width: .5px;
+	border-color: black;
+	height: 20px;
 }
 
-.sendButton {
-  display: block;
-  font-size: 16pt;
+.rwdc-calCell {
+
 }
 
-/** Most GWT widgets already have a style name defined */
-.gwt-DialogBox {
-  width: 400px;
+.rwdc-calCell-inactive {
+
 }
 
-.dialogVPanel {
-  margin: 5px;
+.rwdc-eventpane {
+	width: 100px;
+	overflow: hidden;
 }
 
-.serverResponseLabelError {
-  color: red;
+.rwdc-dayPanel {
+	border-style: solid;
+	border-width:.5px;
+	border-color:white;
+	background-color:red;
+	height: 100%;
+	width: 100%;
 }
 
-/** Set ids using widget.getElement().setId("idOfElement") */
-#closeButton {
-  margin: 15px 6px 6px;
+.rwdc-dayPanel-notcurrent {
+	border-style: solid;
+	border-width:.5px;
+	border-color:white;
+	background-color:grey;
+}
+
+.rwdc-calendarMainPanel {
+	height: 100%;
+	width: 100%;
+}
+
+.rwdc-calendarTable {
+	border-collapse:collapse;
+	height: 100%;
+	width: 100%;
+}
+
+.rwdc-navPanel {
+	border-style:solid;
+	border-width:1px;
+	padding:0;
+	margin:0;
+}
+
+.rwdc-popup {
+	border-style:solid;
+	border-width:1px;
+		background-color:white;
+	padding: 15px;
 }
