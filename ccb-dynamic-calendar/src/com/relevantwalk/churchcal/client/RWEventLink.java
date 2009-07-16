@@ -1,6 +1,7 @@
 package com.relevantwalk.churchcal.client;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -11,14 +12,38 @@ import com.google.gwt.user.client.ui.Label;
 public class RWEventLink extends Composite implements ClickHandler{
 	private ArrayList<RWEventLinkListener> listeners = new ArrayList<RWEventLinkListener>();
 	private RWEventItem eventItem;
+	
+
 	private Label label = new Label("" , false);
 	
 	public RWEventLink(RWEventItem eventItem, RWEventLinkListener listener){
 		addEventLinkListener(listener);
 		this.eventItem = eventItem;
+		String displayText = buildTime(eventItem.getEventStartDate()) + eventItem.getEventName();
 		initWidget(label);
 		label.addClickHandler(this);
-		label.setText(eventItem.getEventName());
+		label.setText(displayText);
+	}
+	
+	@SuppressWarnings("deprecation")
+	private String buildTime(Date date){ //Hopefully GWT will implement date formatting soon
+		String ampm;
+		int hours = date.getHours();
+		if (hours > 12) {
+			ampm = "pm";
+			hours = hours - 12;
+		} else ampm = "am";
+		String minutes = Integer.toString(date.getMinutes());
+		if (minutes.length() == 1) minutes = "0" + minutes;
+		String time = Integer.toString(hours) + ":" + minutes + ampm;
+		return time;
+	}
+	
+	/**
+	 * @return the eventItem
+	 */
+	public RWEventItem getEventItem() {
+		return eventItem;
 	}
 	
 	public void addEventLinkListener(RWEventLinkListener listener)
@@ -33,6 +58,7 @@ public class RWEventLink extends Composite implements ClickHandler{
 
 	@Override
 	public void onClick(ClickEvent event) {
+		//not sure multiple listeners makes sense
 		for(Iterator<RWEventLinkListener> it = listeners.iterator(); it.hasNext();)
 		{
 			RWEventLinkListener listener = (RWEventLinkListener) it.next();

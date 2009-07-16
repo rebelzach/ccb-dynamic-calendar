@@ -100,17 +100,19 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		monthTitle.setText(getMonthName(currentMonth) + " " + (currentYear + 1900));
 		
 		//this gets the coordinates for the size of the table
-		int endCoordRow = (int) Math.ceil((firstDayofMonth + dayCount)/7.0);
+		int endCoordRow = ((int) Math.ceil((firstDayofMonth + dayCount)/7.0)) - 1;
 		int endCoordCol = 6;
 		int cellHeight = 
-			(Window.getClientHeight() - headerOffset)/(endCoordRow);
+			(Window.getClientHeight() - headerOffset)/(endCoordRow + 1);
 		int cellWidth = 
 			(Window.getClientWidth())/(7);
 		firstDate = gridCoordtoDate(0,0);
 		endDate = gridCoordtoDate(endCoordCol, endCoordRow);
-		
+		endDate.setHours(23);
+		endDate.setMinutes(59);
 		int maxCells = (int) (Math.ceil((firstDayofMonth + dayCount)/7.0))*7;
 		calendarTable.clear();
+		
 		for(int i = 1;i <= maxCells;i++) { 
 			Date currentDate = gridCoordtoDate(currentCol,currentRow);
 			boolean isMonthDay = (currentDate.getMonth() == currentMonth);
@@ -248,7 +250,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 			RWEventItem item = (RWEventItem) it.next();
 			if (!(item.getEventStartDate().before(firstDate) || item.getEventStartDate().after(endDate))){
 				RWGridCoord widgetPosition = dateToGridCoords(item.getEventStartDate());
-				
 				((DayPanel) calendarTable.getWidget(widgetPosition.getY(),widgetPosition.getX())).addEvent(item);
 			}
 		}
@@ -431,7 +432,17 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		 * public so that if you ever want to add events dynamically...
 		 */
 		public void addEvent(RWEventItem eventItem){
-				eventsPanel.add(new RWEventLink(eventItem, detailHelper));	
+			final int panelCount = eventsPanel.getWidgetCount();
+			int insertIndex = 0;
+			if(panelCount > 0) { 
+				for (;insertIndex < panelCount; insertIndex++) { //Sorting Loop
+					RWEventLink link = (RWEventLink) eventsPanel.getWidget(insertIndex);
+					//If the event we are adding is before the event in the list
+					if (eventItem.getEventStartDate().before(link.getEventItem().getEventStartDate()))
+						break;
+				}
+			}
+			eventsPanel.insert(new RWEventLink(eventItem, detailHelper), insertIndex);
 		}
 		
 		/*
@@ -441,7 +452,7 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 			for(Iterator<RWEventItem> it = daysEvents.iterator(); it.hasNext();)
 			{
 				RWEventItem item = (RWEventItem) it.next();
-				eventsPanel.add(new Label(item.getEventName()));
+				addEvent(item);
 			}
 		}
 	}
