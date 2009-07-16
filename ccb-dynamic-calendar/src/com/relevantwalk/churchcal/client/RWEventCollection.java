@@ -172,11 +172,18 @@ public class RWEventCollection  {
 				eventGroupName = "";
 			}
 			
-			//EVENT group id //TODO This needs to be implemented
 			
+			//EVENT group id
+			String eventGroupid;
+			try {
+				Element groupNameElement =  (Element) event.getElementsByTagName("group_name").item(0);
+				eventGroupid = groupNameElement.getAttribute("ccb_id");
+			}catch (Exception e) {
+				eventGroupid = "";
+			}
 			//EVENT group_type //TODO Does this need to be implemented?
 			
-			//This could probably be rolled into a constructor
+			//all the following calls to eventItem could probably be rolled into an eventItem constructor
 
 			RWEventItem eventItem = new RWEventItem();
 			eventItem.setEventName(eventName);
@@ -187,6 +194,7 @@ public class RWEventCollection  {
 			eventItem.setEventType(eventType);
 			eventItem.setEventLocation(eventLocation);
 			eventItem.setEventGroupName(eventGroupName);
+			eventItem.setEventGroupid(eventGroupid);
 			eventList.add(eventItem);
 		}
 		

@@ -11,6 +11,9 @@ public class RWEventItem {
 	private String eventType;
 	private String eventLocation;
 	private String eventGroupName;
+	private String eventGroupid;
+
+	
 
 	public RWEventItem() {
 		this.eventName = "";	
@@ -109,6 +112,20 @@ public class RWEventItem {
 	}
 	public void setEventName(String eventName) {
 		this.eventName = eventName;
+	}
+	
+	/**
+	 * @return the eventGroupid
+	 */
+	public String getEventGroupid() {
+		return eventGroupid;
+	}
+
+	/**
+	 * @param eventGroupid the eventGroupid to set
+	 */
+	public void setEventGroupid(String eventGroupid) {
+		this.eventGroupid = eventGroupid;
 	}
 	public Date getEventStartDate() {
 		return eventStartDate;
