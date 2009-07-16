@@ -11,7 +11,7 @@ import com.google.gwt.user.client.ui.Label;
 public class RWEventLink extends Composite implements ClickHandler{
 	private ArrayList<RWEventLinkListener> listeners = new ArrayList<RWEventLinkListener>();
 	private RWEventItem eventItem;
-	private Label label = new Label();
+	private Label label = new Label("" , false);
 	
 	public RWEventLink(RWEventItem eventItem, RWEventLinkListener listener){
 		addEventLinkListener(listener);
