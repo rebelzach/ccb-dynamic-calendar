@@ -7,11 +7,14 @@ import java.util.Iterator;
 import java.lang.Math;
 
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -29,6 +32,7 @@ interface RWCalendarDataListener extends java.util.EventListener
 
 public class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 {
+	private final int headerOffset = 58;
 	private FlexTable calendarTable = new FlexTable();
 	private VerticalPanel mainPanel = new VerticalPanel();
 	private HorizontalPanel navPanel= new HorizontalPanel();
@@ -45,7 +49,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 				}
 			});
 	private Label monthTitle = new Label();
-	
 	@SuppressWarnings("unused")
 	private RWEventCollection calendarEvents;
 	private int currentYear;
@@ -64,13 +67,21 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 	@SuppressWarnings("deprecation")
 	public RWDynamicCalendar() {
 		initWidget(mainPanel);
+		navPanel.setStyleName("rwdc-navPanel");
 		navPanel.add(monthTitle);
 		navPanel.add(prevMonthButton);
 		navPanel.add(nextMonthButton);
+		mainPanel.setStyleName("rwdc-calendarMainPanel");
 		mainPanel.add(navPanel);
 		mainPanel.add(calendarTable);
-		
+		mainPanel.setCellHeight(calendarTable, "100%");
+		calendarTable.setBorderWidth(0);
+		calendarTable.setCellSpacing(0);
+		calendarTable.setCellPadding(0);
+		buildHeaders();
+		calendarTable.setWidget(0, 0, new Label("-"));
 		Date today = new Date();
+		
 		buildCalendar(today.getMonth(),today.getYear());
 	}
 	
@@ -87,28 +98,32 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		currentMonth = month;
 		currentYear = year;
 		monthTitle.setText(getMonthName(currentMonth) + " " + (currentYear + 1900));
-
+		
 		//this gets the coordinates for the size of the table
 		int endCoordRow = (int) Math.ceil((firstDayofMonth + dayCount)/7.0);
 		int endCoordCol = 6;
+		int cellHeight = 
+			(Window.getClientHeight() - headerOffset)/(endCoordRow);
+		int cellWidth = 
+			(Window.getClientWidth())/(7);
 		firstDate = gridCoordtoDate(0,0);
 		endDate = gridCoordtoDate(endCoordCol, endCoordRow);
+		
 		int maxCells = (int) (Math.ceil((firstDayofMonth + dayCount)/7.0))*7;
-		int rowCount = calendarTable.getRowCount();
-		
-		if (!(rowCount == 0)){
-			for (int i = 0; i < rowCount; i++){	
-				calendarTable.removeRow(0);
-			}
-		}
-		
+		calendarTable.clear();
 		for(int i = 1;i <= maxCells;i++) { 
 			Date currentDate = gridCoordtoDate(currentCol,currentRow);
+			boolean isMonthDay = (currentDate.getMonth() == currentMonth);
 			calendarTable.setWidget(currentRow, currentCol, new DayPanel(
-					currentDate.getDate(),
-					(currentDate.getMonth() == currentMonth)));
-			//calendarTable.getFlexCellFormatter().setStyleName(currentRow, currentCol, "cal-table-cell");
-
+					currentDate.getDate(),isMonthDay));
+			if (isMonthDay) {
+				calendarTable.getFlexCellFormatter().setStyleName(currentRow, currentCol, "rwdc-calCell");
+			} else {
+				calendarTable.getFlexCellFormatter().setStyleName(currentRow, currentCol, "rwdc-calCell-inactive");
+			}
+			calendarTable.getFlexCellFormatter().setHeight(currentRow, currentCol, cellHeight + "px");
+			calendarTable.getFlexCellFormatter().setWidth(currentRow, currentCol, cellWidth + "px");
+			
 			//If its Saturday go to Sunday of next week
 			if (currentCol == 6){
 				currentCol = 0;
@@ -118,6 +133,7 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 				currentCol++;
 			}
 		}
+
 		calendarEvents = new RWEventCollection(firstDate,endDate,this);
 	}
 	
@@ -226,8 +242,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 
 	@Override
 	public void onDataInit(RWEventCollection returnedEvents) {
-		
-		
 		ArrayList<RWEventItem> eventList = returnedEvents.allEvents();
 		for(Iterator<RWEventItem> it = eventList.iterator(); it.hasNext();)
 		{
@@ -268,7 +282,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		return returnDate;
 	}
 	
-	
 	@SuppressWarnings("deprecation")
 	private RWGridCoord dateToGridCoords(Date date){
 		RWGridCoord gridCoord = new RWGridCoord();
@@ -277,7 +290,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		int gridCount = 0;
 		
 		if (currentMonth == date.getMonth()){
-			
 			gridCount = date.getDate() + firstDayofMonth;
 			column = (gridCount%7)-1;
 			row = (int) Math.floor(gridCount/7);
@@ -287,12 +299,10 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 			}
 		} else if ((currentMonth - 1) == date.getMonth()){
 			gridCount = (firstDayofMonth - 1) + (date.getDate()-previousMonthDayCount);
-			if (gridCount >= 0){
-				
-			column = gridCount;
-			row = 0;
+			if (gridCount >= 0){	
+				column = gridCount;
+				row = 0;
 			} else {
-				
 				//TODO This should throw an out of range exception
 			}
 		} else if ((currentMonth + 1) == date.getMonth()){
@@ -303,7 +313,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 				column = 6;
 				row--;
 			}
-			
 		} else {
 			//TODO This should throw an out of range exception
 		}
@@ -320,7 +329,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		return gridCoord;
 	}
 	
-
 	@Override
 	public void onDataError(String errMsg) {
 		// TODO Auto-generated method stub
@@ -355,10 +363,29 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		}
 	}
 	
+	private void buildHeaders() {
+		Element thead = DOM.createTHead();
+		DOM.insertChild(calendarTable.getElement(), thead, 0);
+		Element tr = DOM.createTR();
+		DOM.appendChild(thead, tr);
+		String[] daysArray = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+		for (int i=0; i < daysArray.length; i++){
+			Element th = DOM.createTH();
+			DOM.appendChild(tr, th);
+			DOM.setElementAttribute(th, "class", "rwdc-header");
+			// NB!!!! camelback on attributes for IE or despair
+			//DOM.setElementAttribute(th, "colSpan", "hi");
+			//DOM.setElementAttribute(th, "align", "left");
+			//DOM.setElementAttribute(th, "border", "1");
+			//set header text
+			DOM.setInnerText(th, daysArray[i]);
+		}
+	}
+	
 	private class DayPanel extends Composite {
 		private VerticalPanel dayPanel = new VerticalPanel();
 		private HorizontalPanel titlePanel = new HorizontalPanel();
-		private VerticalPanel eventsPanel = new VerticalPanel();
+		private FlowPanel eventsPanel = new FlowPanel();
 		private int date;
 		private boolean isMonthDay;
 		/*
@@ -389,8 +416,15 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		
 		private void buildDayPanel(){
 			titlePanel.add(new Label(Integer.toString(date)));
+			if (isMonthDay){
+				dayPanel.setStyleName("rwdc-dayPanel");
+			} else {
+				dayPanel.setStyleName("rwdc-dayPanel-notcurrent");
+			}
 			dayPanel.add(titlePanel);
 			dayPanel.add(eventsPanel);
+			dayPanel.setCellHeight(eventsPanel, "100%");
+			eventsPanel.setStyleName("rwdc-eventpane");
 		}
 		
 		/*
@@ -410,7 +444,5 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 				eventsPanel.add(new Label(item.getEventName()));
 			}
 		}
-		
 	}
-
 }

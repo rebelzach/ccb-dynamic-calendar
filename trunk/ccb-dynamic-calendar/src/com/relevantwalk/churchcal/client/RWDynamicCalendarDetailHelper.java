@@ -26,6 +26,7 @@ public class RWDynamicCalendarDetailHelper implements RWDayPanelListener, RWEven
 	@Override
 	public void onDisplayDetail(RWEventItem returnedItem) {
 		simplePopup = new PopupPanel(true);
+		simplePopup.setStyleName("rwdc-popup");
 		simplePopup.setAnimationEnabled(true);
 		VerticalPanel popupPanel = new VerticalPanel();
 		popupPanel.add(new Label(returnedItem.getEventName()));
@@ -36,17 +37,17 @@ public class RWDynamicCalendarDetailHelper implements RWDayPanelListener, RWEven
 		}
 		popupPanel.add(new Label(returnedItem.getEventLocation()));
 		popupPanel.add(new Label(returnedItem.getEventGroupName()));
-		
+		simplePopup.setWidth((Window.getClientWidth()/2 - 60) + "px");
 		simplePopup.add(popupPanel);
 		
 		int itemDay = returnedItem.getEventStartDate().getDay();
 		if (itemDay < 3) {
 			int left = Window.getClientWidth()/2 - 30;
-			int top = 30;
+			int top = 90;
 			simplePopup.setPopupPosition(left, top);
 		} else {
 			int left = 30;
-			int top = 30;
+			int top = 90;
 			simplePopup.setPopupPosition(left, top);
 		}
 		simplePopup.show();
