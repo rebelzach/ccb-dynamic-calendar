@@ -102,10 +102,12 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		//this gets the coordinates for the size of the table
 		int endCoordRow = ((int) Math.ceil((firstDayofMonth + dayCount)/7.0)) - 1;
 		int endCoordCol = 6;
+		int windowHeight = Window.getClientHeight() - 3; //breathing room
+		int windowWidth = Window.getClientWidth() - 3; //breathing room
 		int cellHeight = 
-			(Window.getClientHeight() - headerOffset)/(endCoordRow + 1);
+			(windowHeight - headerOffset)/(endCoordRow + 1);
 		int cellWidth = 
-			(Window.getClientWidth())/(7);
+			(windowWidth)/(7);
 		firstDate = gridCoordtoDate(0,0);
 		endDate = gridCoordtoDate(endCoordCol, endCoordRow);
 		endDate.setHours(23);
@@ -117,7 +119,7 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 			Date currentDate = gridCoordtoDate(currentCol,currentRow);
 			boolean isMonthDay = (currentDate.getMonth() == currentMonth);
 			calendarTable.setWidget(currentRow, currentCol, new DayPanel(
-					currentDate.getDate(),isMonthDay));
+					currentDate.getDate(),isMonthDay, cellHeight, cellWidth));
 			if (isMonthDay) {
 				calendarTable.getFlexCellFormatter().setStyleName(currentRow, currentCol, "rwdc-calCell");
 			} else {
@@ -369,7 +371,7 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		DOM.insertChild(calendarTable.getElement(), thead, 0);
 		Element tr = DOM.createTR();
 		DOM.appendChild(thead, tr);
-		String[] daysArray = {"Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+		String[] daysArray = {"Sunday", "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
 		for (int i=0; i < daysArray.length; i++){
 			Element th = DOM.createTH();
 			DOM.appendChild(tr, th);
@@ -383,32 +385,28 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		}
 	}
 	
-	private class DayPanel extends Composite {
-		private VerticalPanel dayPanel = new VerticalPanel();
-		private HorizontalPanel titlePanel = new HorizontalPanel();
+	private class DayPanel extends Composite implements ClickHandler{
+		private FlowPanel dayPanel = new FlowPanel();
+		private FlowPanel titlePanel = new FlowPanel();
+		private FlowPanel stylePanel = new FlowPanel();
 		private FlowPanel eventsPanel = new FlowPanel();
 		private int date;
+		private int panelHeight;
+		private int panelWidth;
+		private boolean panelOverloaded = false;
+		private int overloadCounter = 1;
 		private boolean isMonthDay;
-		/*
-		 * Creates a day panel with passed events
-		 * isMonthDay: 	True when the panel is part of the current month
-		 * 				Only affects styling of the panel
-		 */
-		public DayPanel(int date, boolean isMonthDay, ArrayList<RWEventItem> daysEvents){
-			initWidget(dayPanel); //called in the constructor just so its called only once
-			this.date = date;
-			this.isMonthDay = isMonthDay;
-			buildDayPanel();
-			addEvents(daysEvents);
-		}
+		private ArrayList<RWEventItem> eventList = new ArrayList<RWEventItem>();
+		
 		/*
 		 * Creates a day panel with no events
 		 * isMonthDay: 	True when the panel is part of the current month
 		 * 				Only affects styling of the panel
 		 */
-		public DayPanel(int date, boolean isMonthDay){
-			initWidget(dayPanel); //called in the constructor just so its called only once
-
+		public DayPanel(int date, boolean isMonthDay, int height, int width){
+			initWidget(stylePanel); //called in the constructor just so its called only once
+			panelHeight = height;
+			panelWidth = width;
 			this.date = date;
 			this.isMonthDay = isMonthDay;
 			buildDayPanel();
@@ -416,33 +414,69 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		}
 		
 		private void buildDayPanel(){
-			titlePanel.add(new Label(Integer.toString(date)));
+			Label titleLabel = new Label(Integer.toString(date));
+			titleLabel.addClickHandler(this);
+			titlePanel.add(titleLabel);
 			if (isMonthDay){
 				dayPanel.setStyleName("rwdc-dayPanel");
 			} else {
 				dayPanel.setStyleName("rwdc-dayPanel-notcurrent");
-			}
+			}	
+			stylePanel.setHeight(panelHeight + "px");
+			stylePanel.setWidth(panelWidth + "px");
+			stylePanel.add(dayPanel);
+			
 			dayPanel.add(titlePanel);
 			dayPanel.add(eventsPanel);
-			dayPanel.setCellHeight(eventsPanel, "100%");
 			eventsPanel.setStyleName("rwdc-eventpane");
+			titlePanel.setStyleName("rwdc-day-date-title");
 		}
 		
 		/*
 		 * public so that if you ever want to add events dynamically...
 		 */
 		public void addEvent(RWEventItem eventItem){
+			eventList.add(eventItem);
+			if (panelOverloaded) {
+				overloadCounter++;
+				addEventOverload();
+				return;
+			}
 			final int panelCount = eventsPanel.getWidgetCount();
 			int insertIndex = 0;
 			if(panelCount > 0) { 
-				for (;insertIndex < panelCount; insertIndex++) { //Sorting Loop
-					RWEventLink link = (RWEventLink) eventsPanel.getWidget(insertIndex);
-					//If the event we are adding is before the event in the list
-					if (eventItem.getEventStartDate().before(link.getEventItem().getEventStartDate()))
-						break;
+					int eventPanelHeight = (eventsPanel.getOffsetHeight());
+					int eventAvgHeight = eventPanelHeight/panelCount;
+					int titlePanelOffset = eventsPanel.getAbsoluteTop() - titlePanel.getAbsoluteTop();
+					eventPanelHeight = eventPanelHeight + titlePanelOffset;
+					if (panelHeight - (eventPanelHeight) < eventAvgHeight){
+						//There is no more room!
+						overloadCounter++;
+						panelOverloaded = true;
+						addEventOverload();
+						return;
+					}
+
+					for (;insertIndex < panelCount; insertIndex++) { //Sorting Loop
+						RWEventLink link = (RWEventLink) eventsPanel.getWidget(insertIndex);
+						//If the event we are adding is before the event in the list
+						if (eventItem.getEventStartDate().before(link.getEventItem().getEventStartDate()))
+							break;
+					}
+
 				}
-			}
-			eventsPanel.insert(new RWEventLink(eventItem, detailHelper), insertIndex);
+			final RWEventLink newEventLink = new RWEventLink(eventItem, detailHelper);
+			eventsPanel.insert(newEventLink, insertIndex);
+			
+		}
+		
+		private void addEventOverload(){
+			final int panelCount = eventsPanel.getWidgetCount();
+			eventsPanel.remove(panelCount - 1);
+			Label overloadLabel = new Label("+" + overloadCounter + " more");
+			overloadLabel.setStyleName("rwdc-moreevents");
+			overloadLabel.addClickHandler(this);
+			eventsPanel.add(overloadLabel);
 		}
 		
 		/*
@@ -454,6 +488,19 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 				RWEventItem item = (RWEventItem) it.next();
 				addEvent(item);
 			}
+		}
+
+		@Override
+		public void onClick(ClickEvent event) {
+			// TODO Auto-generated method stub
+			detailHelper.onDisplayDay(eventList);
+		}
+
+		/**
+		 * @return the eventList
+		 */
+		public ArrayList<RWEventItem> getEventList() {
+			return eventList;
 		}
 	}
 }
