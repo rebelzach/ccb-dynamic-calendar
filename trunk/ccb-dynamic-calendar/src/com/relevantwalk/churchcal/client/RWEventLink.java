@@ -7,26 +7,31 @@ import java.util.Iterator;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 
 public class RWEventLink extends Composite implements ClickHandler{
 	private ArrayList<RWEventLinkListener> listeners = new ArrayList<RWEventLinkListener>();
 	private RWEventItem eventItem;
-	
-
-	private Label label = new Label("" , false);
+	private FlowPanel linkPanel = new FlowPanel();
 	
 	public RWEventLink(RWEventItem eventItem, RWEventLinkListener listener){
 		addEventLinkListener(listener);
 		this.eventItem = eventItem;
-		String displayText = buildTime(eventItem.getEventStartDate()) + eventItem.getEventName();
-		initWidget(label);
-		label.addClickHandler(this);
-		label.setText(displayText);
+		initWidget(linkPanel);
+		Label timeLabel = new Label(buildTime(eventItem.getEventStartDate()));
+		timeLabel.setStyleName("rwdc-time");
+		Label nameLabel = new Label(eventItem.getEventName());
+		nameLabel.setStyleName("rwdc-event-name");
+		linkPanel.add(timeLabel);
+		linkPanel.add(nameLabel);
+		
+		timeLabel.addClickHandler(this);
+		nameLabel.addClickHandler(this);
 	}
 	
 	@SuppressWarnings("deprecation")
-	private String buildTime(Date date){ //Hopefully GWT will implement date formatting soon
+	private String buildTime(Date date){ //needs to use GWT date formatting
 		String ampm;
 		int hours = date.getHours();
 		if (hours > 12) {

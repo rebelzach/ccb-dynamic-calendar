@@ -83,6 +83,42 @@
 			<leader_phone>(303) 699-2021 </leader_phone>
 			<leader_email>zach@relevantwalk.com</leader_email>
 		</item>
+		<item>
+			<date>2009-07-02</date>
+			<event_name ccb_id="15">2Trinity Service Project TBA</event_name>
+
+			<event_description></event_description>
+			<start_time>04:15:00</start_time>
+			<end_time>20:45:00</end_time>
+			<event_duration>150</event_duration>
+			<event_type>Open To All</event_type>
+			<location></location>
+			<group_name ccb_id="7">Youth Group</group_name>
+
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
+		<item>
+			<date>2009-07-02</date>
+			<event_name ccb_id="15">2Trinity Service Project TBA</event_name>
+
+			<event_description></event_description>
+			<start_time>03:15:00</start_time>
+			<end_time>20:45:00</end_time>
+			<event_duration>150</event_duration>
+			<event_type>Open To All</event_type>
+			<location></location>
+			<group_name ccb_id="7">Youth Group</group_name>
+
+			<group_type>Care / Small Group</group_type>
+			<grouping_name></grouping_name>
+			<leader_name ccb_id="1">Zachary Starkebaum</leader_name>
+			<leader_phone>(303) 699-2021 </leader_phone>
+			<leader_email>zach@relevantwalk.com</leader_email>
+		</item>
 	<item>
 			<date>2009-07-02</date>
 			<event_name ccb_id="15">3Trinity Service Project TBA</event_name>
