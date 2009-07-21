@@ -19,14 +19,19 @@ public class RWEventLink extends Composite implements ClickHandler{
 		addEventLinkListener(listener);
 		this.eventItem = eventItem;
 		initWidget(linkPanel);
-		Label timeLabel = new Label(buildTime(eventItem.getEventStartDate()));
-		timeLabel.setStyleName("rwdc-time");
+		
+		if (!(eventItem.getIsAllDayEvent())){
+			Label timeLabel = new Label(buildTime(eventItem.getEventStartDate()));
+			timeLabel.setStyleName("rwdc-time");
+			linkPanel.add(timeLabel);
+			timeLabel.addClickHandler(this);
+		}
 		Label nameLabel = new Label(eventItem.getEventName());
 		nameLabel.setStyleName("rwdc-event-name");
-		linkPanel.add(timeLabel);
+		
 		linkPanel.add(nameLabel);
 		
-		timeLabel.addClickHandler(this);
+		
 		nameLabel.addClickHandler(this);
 	}
 	

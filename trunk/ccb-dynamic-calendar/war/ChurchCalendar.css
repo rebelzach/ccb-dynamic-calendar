@@ -2,28 +2,57 @@ body {
 	overflow:hidden;
 }
 
+/* Dynamic calendar
+ * Navigation Bar
+ * CSS definitions
+ */
+ 
+.rwdc-navPanel {
+	background: #DDDDDD;
+	position: relative;
+	width: 100%;
+	text-align:center;
+}
+
+.rwdc-navPanel-month{
+	font-size:2em;
+}
+
+.rwdc-navPanel-buttons-wrapper{
+	position: absolute;
+	margin: 5px;
+	right: 0;	
+}
+.rwdc-navPanel-buttons{
+	display: inline;
+}
+ 
+
+/* Dynamic calendar
+ * Calendar Table
+ * CSS definitions
+ */
+
 .rwdc-header {
-	
 	height: 20px;
+	font-weight:normal;
+	font-size: .9em;
 }
 
-.rwdc-calCell {
-
+.rwdc-calendarTable {
+	border-collapse: collapse;
+	height: 100%;
+	width: 100%;
 }
 
-.rwdc-calCell-inactive {
-
-}
-
-.rwdc-eventpane {	
-	padding: 3px;
-	overflow: hidden;
-	white-space: nowrap;
-	/* Don't define height here */
-}
+/* Dynamic calendar
+ * Day Panel
+ * CSS definitions
+ */
 
 .rwdc-dayPanel {
-border-style:solid;
+	position: relative;
+	border-style:solid;
 	border-width:2px;
 	border-color:white;
 	background-color:DDDDDD;
@@ -32,7 +61,8 @@ border-style:solid;
 }
 
 .rwdc-dayPanel-notcurrent {
-border-style:solid;
+	position: relative;
+	border-style:solid;
 	border-width:2px;
 	border-color:white;
 	background-color:grey;
@@ -40,55 +70,108 @@ border-style:solid;
 	width: 100%;
 }
 
-.rwdc-calendarMainPanel {
-	height: 100%;
-	width: 100%;
-
+.rwdc-eventpane {
+	padding: 3px;
+	overflow: hidden;
+	white-space: nowrap;
+	/* Don't define height here */
 }
 
 .rwdc-day-date-title {
-	float: right;
+	z-index:1;
+	position:absolute;
+	right:0;
+	top:0;
 	font-weight: bold; 
 	padding: 2px;
 	background-color:white;
+	cursor: pointer;
 }
 
 .rwdc-time {
+	font-size:.8em;
 	font-weight:bold;
-	display: inline;
+	display: block;
 	cursor: pointer;
 }
 
 .rwdc-event-name {
-	font-size:.7em;
+	font-size:.8em;
 	padding-left:2px;
 	display: inline;
 	cursor: pointer;
 }
 
-
-
-.rwdc-moreevents {
+.rwdc-moreevents { /* The text displayed when a day panel gets full */
 	font-weight: bold;
 	cursor: pointer; 
 }
 
-.rwdc-calendarTable {
-	border-collapse:collapse;
-	height: 100%;
-	width: 100%;
-}
-
-.rwdc-navPanel {
-	border-style:solid;
-	border-width:1px;
-	padding:0;
-	margin:0;
-}
+/* Dynamic calendar
+ * Popup Window
+ * CSS definitions
+ */
 
 .rwdc-popup {
+	padding: 15px;
+	z-index:3;
+}
+ 
+.rwdc-popup-content {
+	background: #ffffff;
+	border: 1px solid #848284;
+	padding: 10px;
+	min-height:200px;
+}
+
+/* Formatting for the labels that preceed event details */
+.rwdc-detail-label { 
+	float:left;
+	text-align: right;
+	width: 20%;
+	font-weight: bold;
+	padding:5px;	
+}
+
+/* popup event description fields*/
+.rwdc-event-description {
+	margin-left:20%;
+	padding:5px;
+}
+/* event name in Day Summary popup */
+ .rwdc-popup .rwdc-event-name {
+	font-size:1em;
+	display: inline;
+}
+
+/* event name in Day Summary popup */
+ .rwdc-popup .rwdc-time {
+	font-size:1em;
+		display: inline;
+	
+}
+
+/* begin popup closebutton */
+.rwdc-popup-closebutton {
 	border-style:solid;
 	border-width:1px;
-		background-color:white;
-	padding: 15px;
+	float: right;
+	height: 10px;
+	width: 10px;
+	padding: 5px;
+	background-color:blue;
 }
+/* end popup closebutton */
+
+/* begin Popup shadow */
+
+.rwdc-popup .rwdc-popup-content {
+	position: relative;
+	left: -4px;
+	top: -4px;
+}
+
+.rwdc-popup .shadow {
+	background: #B8B6B8;
+}
+/* end Popup shadow
