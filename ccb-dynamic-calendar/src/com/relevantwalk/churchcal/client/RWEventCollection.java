@@ -70,6 +70,12 @@ public class RWEventCollection  {
 
 	@SuppressWarnings("deprecation")
 	private void processXML(String xmlText){
+		String passedGroup = Window.Location.getParameter("group");
+		if (passedGroup == null){
+			GWT.log("No Group parameter", null);
+			passedGroup = "";
+		}
+		
 		Document calendarDom = XMLParser.parse(xmlText);
 		Element calendarElement = calendarDom.getDocumentElement();
 		// Must do this if you ever use a raw node list that you expect to be
@@ -172,6 +178,10 @@ public class RWEventCollection  {
 				eventGroupName = "";
 			}
 			
+			if ((!(passedGroup.isEmpty())) && (!(passedGroup.equalsIgnoreCase(eventGroupName)))){
+				GWT.log("You have passed a group and this event does not match:" + passedGroup, null);
+				continue;
+			}
 			
 			//EVENT group id
 			String eventGroupid;
@@ -209,13 +219,13 @@ public class RWEventCollection  {
 	/*
 	 * Fetch the requested URL.
 	 */
-	//@SuppressWarnings("deprecation")
 	private void fetchXML(Date rangeStart, Date rangeEnd) {
 		try {
-			//String dateStart = (rangeStart.getYear()+1900) + "-" + (rangeStart.getMonth()+1) + "-" + rangeStart.getDate();
-			//String dateEnd = (rangeEnd.getYear()+1900) + "-" + (rangeEnd.getMonth()+1) + "-" + rangeEnd.getDate();
+			//String dateStart = DateTimeFormat.getFormat("yyyy-MM-dd").format(rangeStart);
+			//String dateEnd = DateTimeFormat.getFormat("yyyy-MM-dd").format(rangeEnd);
 			//String queryURL = GWT.getModuleBaseURL() + "ccbcal.php?date_start=" + dateStart + "&date_end=" + dateEnd;
 			String queryURL = GWT.getModuleBaseURL() + "calendar.xml"; //for Debug to get around the cross-scripting issue
+			GWT.log("Query:"+ queryURL,null);
 			RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, queryURL);
 			requestBuilder.sendRequest(null, new ResponseTextHandler());
 		} catch (RequestException ex) {

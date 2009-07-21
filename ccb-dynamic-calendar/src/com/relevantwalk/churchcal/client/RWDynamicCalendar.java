@@ -15,7 +15,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -35,7 +34,7 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 	private final int headerOffset = 58;
 	private FlexTable calendarTable = new FlexTable();
 	private VerticalPanel mainPanel = new VerticalPanel();
-	private HorizontalPanel navPanel= new HorizontalPanel();
+	private FlowPanel navPanel= new FlowPanel();
 	private Button prevMonthButton = new Button("Prev",
 			new ClickHandler() {
 				public void onClick(ClickEvent event) {
@@ -68,9 +67,16 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 	public RWDynamicCalendar() {
 		initWidget(mainPanel);
 		navPanel.setStyleName("rwdc-navPanel");
+		monthTitle.setStyleName("rwdc-navPanel-month");
+		FlowPanel navButtonPanel = new FlowPanel();
+		navButtonPanel.setStyleName("rwdc-navPanel-buttons-wrapper");
+		navButtonPanel.add(prevMonthButton);
+		prevMonthButton.setStyleName("rwdc-navPanel-buttons");
+		nextMonthButton.setStyleName("rwdc-navPanel-buttons");
+		navButtonPanel.add(nextMonthButton);
+		navPanel.add(navButtonPanel);
 		navPanel.add(monthTitle);
-		navPanel.add(prevMonthButton);
-		navPanel.add(nextMonthButton);
+		
 		mainPanel.setStyleName("rwdc-calendarMainPanel");
 		mainPanel.add(navPanel);
 		mainPanel.add(calendarTable);
