@@ -11,6 +11,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.Element;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -55,6 +56,9 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 	private int firstDayofMonth; //the "Day" of the 1st
 	private int dayCount;
 	private int previousMonthDayCount;
+	private int borderValue = 2;
+	private int cellHeight;
+	private int cellWidth;
 	private Date firstDate;
 	private Date endDate;
 	private RWDynamicCalendarDetailHelper detailHelper = new RWDynamicCalendarDetailHelper();
@@ -66,6 +70,33 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 	@SuppressWarnings("deprecation")
 	public RWDynamicCalendar() {
 		initWidget(mainPanel);
+
+		//A border
+		String passedBorder = Window.Location.getParameter("border");
+		if (passedBorder == null){
+			GWT.log("No Border parameter using default", null);
+		} else {
+			//Security Check for this parameter
+			try {
+				borderValue = Integer.parseInt(passedBorder);
+			} catch (NumberFormatException e) {
+				GWT.log("illegal border parameter passed", e);
+			}
+		}
+	
+		Element borderStyle = DOM.createElement("style");
+		borderStyle.setInnerText(	".rwdc-calendarMainPanel td { " +
+									"border-width: " + borderValue + "px " + borderValue + "px 0 0;" +
+									"}"+
+									".rwdc-calendarMainPanel table { " +
+									"border-width: 0 0 " + borderValue + "px " + borderValue + "px;" +
+									"}");
+		
+		DOM.insertChild(mainPanel.getElement(), borderStyle, 0);
+		
+		int windowWidth = Window.getClientWidth(); //breathing room
+		cellWidth = ((windowWidth - borderValue)/(7)) - borderValue;
+		
 		navPanel.setStyleName("rwdc-navPanel");
 		monthTitle.setStyleName("rwdc-navPanel-month");
 		FlowPanel navButtonPanel = new FlowPanel();
@@ -76,15 +107,25 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		navButtonPanel.add(nextMonthButton);
 		navPanel.add(navButtonPanel);
 		navPanel.add(monthTitle);
-		
 		mainPanel.setStyleName("rwdc-calendarMainPanel");
 		mainPanel.add(navPanel);
-		mainPanel.add(calendarTable);
+		FlexTable headerTable = new FlexTable();
+		headerTable.setStyleName("rwdc-header");
+		String[] daysArray = {"Sunday", "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
+		for (int i=0; i < daysArray.length; i++){
+			headerTable.setWidget(0, i, new Label(daysArray[i]));
+			headerTable.getCellFormatter().setWidth(0, i, cellWidth + "px");
+		}
+		FlowPanel calendarPanel = new FlowPanel();
+		mainPanel.add(headerTable);
+		
+		calendarPanel.setStyleName("rwdc-calendarTable");
+		calendarPanel.add(calendarTable);
+		mainPanel.add(calendarPanel);
 		mainPanel.setCellHeight(calendarTable, "100%");
 		calendarTable.setBorderWidth(0);
 		calendarTable.setCellSpacing(0);
 		calendarTable.setCellPadding(0);
-		buildHeaders();
 		calendarTable.setWidget(0, 0, new Label("-"));
 		Date today = new Date();
 		
@@ -105,21 +146,24 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		currentYear = year;
 		monthTitle.setText(getMonthName(currentMonth) + " " + (currentYear + 1900));
 		
+		
 		//this gets the coordinates for the size of the table
 		int endCoordRow = ((int) Math.ceil((firstDayofMonth + dayCount)/7.0)) - 1;
 		int endCoordCol = 6;
-		int windowHeight = Window.getClientHeight() - 3; //breathing room
-		int windowWidth = Window.getClientWidth() - 3; //breathing room
-		int cellHeight = 
-			(windowHeight - headerOffset)/(endCoordRow + 1);
-		int cellWidth = 
-			(windowWidth)/(7);
+		int windowHeight = Window.getClientHeight();
+		cellHeight = 
+			((windowHeight - borderValue - headerOffset)/(endCoordRow + 1)) - borderValue;
+		
 		firstDate = gridCoordtoDate(0,0);
 		endDate = gridCoordtoDate(endCoordCol, endCoordRow);
 		endDate.setHours(23);
 		endDate.setMinutes(59);
 		int maxCells = (int) (Math.ceil((firstDayofMonth + dayCount)/7.0))*7;
-		calendarTable.clear();
+		int rowCount = calendarTable.getRowCount();
+		if (rowCount > 0) {
+			for (int i = 0; (i < rowCount); i++ )
+				calendarTable.removeRow(0);
+		}
 		
 		for(int i = 1;i <= maxCells;i++) { 
 			Date currentDate = gridCoordtoDate(currentCol,currentRow);
@@ -143,7 +187,7 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 				currentCol++;
 			}
 		}
-
+		
 		calendarEvents = new RWEventCollection(firstDate,endDate,this);
 	}
 	
@@ -371,30 +415,11 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 			this.y = y;
 		}
 	}
-	
-	private void buildHeaders() {
-		Element thead = DOM.createTHead();
-		DOM.insertChild(calendarTable.getElement(), thead, 0);
-		Element tr = DOM.createTR();
-		DOM.appendChild(thead, tr);
-		String[] daysArray = {"Sunday", "Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"};
-		for (int i=0; i < daysArray.length; i++){
-			Element th = DOM.createTH();
-			DOM.appendChild(tr, th);
-			DOM.setElementAttribute(th, "class", "rwdc-header");
-			// NB!!!! camelback on attributes for IE or despair
-			//DOM.setElementAttribute(th, "colSpan", "hi");
-			//DOM.setElementAttribute(th, "align", "left");
-			//DOM.setElementAttribute(th, "border", "1");
-			//set header text
-			DOM.setInnerText(th, daysArray[i]);
-		}
-	}
+
 	
 	private class DayPanel extends Composite implements ClickHandler{
 		private FlowPanel dayPanel = new FlowPanel();
 		private FlowPanel titlePanel = new FlowPanel();
-		private FlowPanel stylePanel = new FlowPanel();
 		private FlowPanel eventsPanel = new FlowPanel();
 		private int date;
 		private int panelHeight;
@@ -410,7 +435,7 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		 * 				Only affects styling of the panel
 		 */
 		public DayPanel(int date, boolean isMonthDay, int height, int width){
-			initWidget(stylePanel); //called in the constructor just so its called only once
+			initWidget(dayPanel); //called in the constructor just so its called only once
 			panelHeight = height;
 			panelWidth = width;
 			this.date = date;
@@ -428,16 +453,22 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 			} else {
 				dayPanel.setStyleName("rwdc-dayPanel-notcurrent");
 			}	
-			stylePanel.setHeight(panelHeight + "px");
-			stylePanel.setWidth(panelWidth + "px");
-			stylePanel.add(dayPanel);
-			
+			dayPanel.setHeight(panelHeight + "px");
+			dayPanel.setWidth(panelWidth + "px");
 			dayPanel.add(titlePanel);
 			dayPanel.add(eventsPanel);
 			eventsPanel.setStyleName("rwdc-eventpane");
 			titlePanel.setStyleName("rwdc-day-date-title");
 		}
 		
+		private boolean roomForEvent() {
+			final int panelCount = eventsPanel.getWidgetCount();
+			int eventPanelHeight = (eventsPanel.getOffsetHeight());
+			int eventAvgHeight = eventPanelHeight/panelCount;
+			int titlePanelOffset = eventsPanel.getAbsoluteTop() - titlePanel.getAbsoluteTop();
+			eventPanelHeight = eventPanelHeight + titlePanelOffset;
+			return (panelHeight - (eventPanelHeight) > eventAvgHeight);
+		}
 		/*
 		 * public so that if you ever want to add events dynamically...
 		 */
@@ -449,21 +480,29 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 				return;
 			}
 			final int panelCount = eventsPanel.getWidgetCount();
+			boolean shouldCollapse = false;
 			int insertIndex = 0;
 			if(panelCount > 0) { 
-					int eventPanelHeight = (eventsPanel.getOffsetHeight());
-					int eventAvgHeight = eventPanelHeight/panelCount;
-					int titlePanelOffset = eventsPanel.getAbsoluteTop() - titlePanel.getAbsoluteTop();
-					eventPanelHeight = eventPanelHeight + titlePanelOffset;
-					if (panelHeight - (eventPanelHeight) < eventAvgHeight){
-						//There is no more room!
-						overloadCounter++;
-						panelOverloaded = true;
-						addEventOverload();
-						return;
+					//if another event won't fit
+					if (!roomForEvent()){
+						//Ask the links to collapse
+						for (;insertIndex < panelCount; insertIndex++) {
+							RWEventLink link = (RWEventLink) eventsPanel.getWidget(insertIndex);
+							link.collapse();
+						}
+						//If there is still no room
+						if (!roomForEvent()){
+							overloadCounter++;
+							panelOverloaded = true;
+							addEventOverload();
+							return;
+						} else {
+							//The event we're adding should collapse because all the others were asked to.
+							shouldCollapse = true;
+						}
 					}
-
-					for (;insertIndex < panelCount; insertIndex++) { //Sorting Loop
+					//Sort through events by date
+					for (;insertIndex < panelCount; insertIndex++) { 
 						RWEventLink link = (RWEventLink) eventsPanel.getWidget(insertIndex);
 						//If the event we are adding is before the event in the list
 						if (eventItem.getEventStartDate().before(link.getEventItem().getEventStartDate()))
@@ -472,7 +511,9 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 
 				}
 			final RWEventLink newEventLink = new RWEventLink(eventItem, detailHelper);
+			if (shouldCollapse) newEventLink.collapse();
 			eventsPanel.insert(newEventLink, insertIndex);
+			
 			
 		}
 		

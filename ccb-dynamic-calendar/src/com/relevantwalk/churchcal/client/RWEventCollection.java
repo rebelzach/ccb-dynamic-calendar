@@ -28,6 +28,7 @@ public class RWEventCollection  {
 	private ArrayList<RWEventItem> eventList = new ArrayList<RWEventItem>();
 	private Date rangeStart;
 	private Date rangeEnd;
+	private ArrayList<String> groupList = new ArrayList<String>();
 	/*
 	 * It is possible to add multiple listeners to this class though
 	 * currently the Calendar widgets call their own EventCollections separately.
@@ -177,6 +178,19 @@ public class RWEventCollection  {
 			}catch (Exception e) {
 				eventGroupName = "";
 			}
+			
+			int groupLength = groupList.size();
+			boolean matchFound = false;
+			if (groupLength > 0){
+				for(Iterator<String> it = groupList.iterator(); it.hasNext();) {
+					String groupName = (String) it.next();
+					if (groupName.startsWith(eventGroupName)) {
+						matchFound = true;
+						break;
+					}
+				}
+			}
+			if (matchFound == false) groupList.add(eventGroupName);
 			
 			if ((!(passedGroup.isEmpty())) && (!(passedGroup.equalsIgnoreCase(eventGroupName)))){
 				GWT.log("You have passed a group and this event does not match:" + passedGroup, null);

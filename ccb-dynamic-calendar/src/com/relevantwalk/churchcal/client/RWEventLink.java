@@ -14,6 +14,7 @@ public class RWEventLink extends Composite implements ClickHandler{
 	private ArrayList<RWEventLinkListener> listeners = new ArrayList<RWEventLinkListener>();
 	private RWEventItem eventItem;
 	private FlowPanel linkPanel = new FlowPanel();
+	private Label nameLabel;
 	
 	public RWEventLink(RWEventItem eventItem, RWEventLinkListener listener){
 		addEventLinkListener(listener);
@@ -26,13 +27,17 @@ public class RWEventLink extends Composite implements ClickHandler{
 			linkPanel.add(timeLabel);
 			timeLabel.addClickHandler(this);
 		}
-		Label nameLabel = new Label(eventItem.getEventName());
+		nameLabel = new Label(eventItem.getEventName(),true);
 		nameLabel.setStyleName("rwdc-event-name");
 		
 		linkPanel.add(nameLabel);
 		
 		
 		nameLabel.addClickHandler(this);
+	}
+	
+	public void collapse() {
+		nameLabel.setWordWrap(false);
 	}
 	
 	@SuppressWarnings("deprecation")

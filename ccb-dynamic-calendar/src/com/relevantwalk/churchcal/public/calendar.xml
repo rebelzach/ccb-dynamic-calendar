@@ -15,7 +15,7 @@
 	<items count="16">
 	<item>
 			<date>2009-06-14</date>
-<event_name ccb_id="34">TestEvent2</event_name>
+<event_name ccb_id="34">TestEvent2 weio weoio weoiwo weio weoio</event_name>
 <event_description>This is a test event</event_description>
 <start_time>19:00:00</start_time>
 <end_time>21:00:00</end_time>
@@ -32,7 +32,7 @@
 		</item>
 	<item>
 			<date>2009-06-14</date>
-<event_name ccb_id="34">TestEvent1</event_name>
+<event_name ccb_id="34">TestEvent1 wieo wioei wieowi weiow weiowe</event_name>
 <event_description>This is a test event</event_description>
 <start_time>19:00:00</start_time>
 <end_time>21:00:00</end_time>

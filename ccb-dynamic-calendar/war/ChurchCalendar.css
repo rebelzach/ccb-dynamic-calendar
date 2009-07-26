@@ -31,18 +31,39 @@ body {
 /* Dynamic calendar
  * Calendar Table
  * CSS definitions
+ .rwdc-calendarTable 
  */
 
 .rwdc-header {
-	height: 20px;
-	font-weight:normal;
+	border-collapse: collapse;	
+	font-weight: normal;
 	font-size: .9em;
+	border-style: solid solid none solid; 
 }
 
-.rwdc-calendarTable {
-	border-collapse: collapse;
+.rwdc-header td, .rwdc-header{
+	border-color: white;
+}
+
+.rwdc-header td{
+	border-style: solid;
+}
+
+.rwdc-header td {
+	text-align: center;
+}
+
+.rwdc-calendarTable td, .rwdc-calendarTable table {
+	border-style: solid; 
+	border-color: white; 
+	/* don't define a border width here */
+	}
+
+.rwdc-calendarTable table {
+	border-collapse: collapse;	
 	height: 100%;
 	width: 100%;
+	/* don't define a border width here */
 }
 
 /* Dynamic calendar
@@ -52,28 +73,19 @@ body {
 
 .rwdc-dayPanel {
 	position: relative;
-	border-style:solid;
-	border-width:2px;
 	border-color:white;
 	background-color:DDDDDD;
-	height: 100%;
-	width: 100%;
 }
 
 .rwdc-dayPanel-notcurrent {
 	position: relative;
-	border-style:solid;
-	border-width:2px;
 	border-color:white;
 	background-color:grey;
-	height: 100%;
-	width: 100%;
 }
 
 .rwdc-eventpane {
 	padding: 3px;
 	overflow: hidden;
-	white-space: nowrap;
 	/* Don't define height here */
 }
 
@@ -147,8 +159,7 @@ body {
 /* event name in Day Summary popup */
  .rwdc-popup .rwdc-time {
 	font-size:1em;
-		display: inline;
-	
+	display: inline;
 }
 
 /* begin popup closebutton */
