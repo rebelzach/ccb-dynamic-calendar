@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.PushButton;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.relevantwalk.churchcaldata.client.RWEventItem;
 
 /*
  * Interface for the dataListener for EventLinks
@@ -32,7 +33,6 @@ interface RWDayPanelListener extends java.util.EventListener
 public class RWDynamicCalendarDetailHelper implements RWDayPanelListener, RWEventLinkListener{
 	private PopupPanel simplePopup = new PopupPanel(true);;
 
-	@Override
 	public void onDisplayDetail(RWEventItem returnedItem) {
 		Date currentDate = returnedItem.getEventStartDate();
 		FlowPanel popupPanel = buildPopup(currentDate);
@@ -96,7 +96,6 @@ public class RWDynamicCalendarDetailHelper implements RWDayPanelListener, RWEven
 		
 	}
 
-	@Override
 	public void onDisplayDay(ArrayList<RWEventItem> eventList) {
 		Date currentDate = eventList.get(0).getEventStartDate();
 		FlowPanel popupLayout = buildPopup(currentDate);
