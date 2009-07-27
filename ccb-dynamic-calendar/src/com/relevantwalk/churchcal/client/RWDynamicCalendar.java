@@ -11,24 +11,16 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.Element;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.relevantwalk.churchcaldata.client.RWEventCollection;
+import com.relevantwalk.churchcaldata.client.RWEventItem;
+import com.relevantwalk.churchcaldata.client.RWCalendarDataListener;
 
-/*
- * Interface for the dataListener for EventCollections
- * 
- */
-interface RWCalendarDataListener extends java.util.EventListener
-{
-	void onDataInit(RWEventCollection returnedEvents);
-	void onDataError(String errMsg);
-	//void onEventAdd (could be super interesting for a dynamically updated calendar)
-}
 
 public class RWDynamicCalendar extends Composite implements RWCalendarDataListener
 {
@@ -70,29 +62,16 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 	@SuppressWarnings("deprecation")
 	public RWDynamicCalendar() {
 		initWidget(mainPanel);
-
-		//A border
-		String passedBorder = Window.Location.getParameter("border");
-		if (passedBorder == null){
-			GWT.log("No Border parameter using default", null);
-		} else {
-			//Security Check for this parameter
+		RWDCUrlArgument borderArg = new RWDCUrlArgument("border");
+		if (borderArg.isDefined()) {
 			try {
-				borderValue = Integer.parseInt(passedBorder);
-			} catch (NumberFormatException e) {
-				GWT.log("illegal border parameter passed", e);
+				borderValue = borderArg.toInt();
+			} catch(NumberFormatException e) { 
+				//Do nothing
 			}
 		}
-	
-		Element borderStyle = DOM.createElement("style");
-		borderStyle.setInnerText(	".rwdc-calendarMainPanel td { " +
-									"border-width: " + borderValue + "px " + borderValue + "px 0 0;" +
-									"}"+
-									".rwdc-calendarMainPanel table { " +
-									"border-width: 0 0 " + borderValue + "px " + borderValue + "px;" +
-									"}");
 		
-		DOM.insertChild(mainPanel.getElement(), borderStyle, 0);
+		styleCalendar();
 		
 		int windowWidth = Window.getClientWidth(); //breathing room
 		cellWidth = ((windowWidth - borderValue)/(7)) - borderValue;
@@ -130,6 +109,32 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		Date today = new Date();
 		
 		buildCalendar(today.getMonth(),today.getYear());
+	}
+	
+	private void styleCalendar() {
+		RWDCUrlArgument borderArg = new RWDCUrlArgument("border");
+		int borderValue = this.borderValue; //Yes this is getting redeclared
+		if (borderArg.isDefined()) {
+			boolean isInteger = true;
+			try {
+				borderValue = borderArg.toInt();
+			} catch (NumberFormatException e){
+				isInteger = false;
+			}
+			
+			if (isInteger == true) {
+				Element borderStyle = DOM.createElement("style");
+				borderStyle.setInnerText(	".rwdc-calendarMainPanel td { " +
+											"border-width: " + borderValue + "px " + borderValue + "px 0 0;" +
+											"}"+
+											".rwdc-calendarMainPanel table { " +
+											"border-width: 0 0 " + borderValue + "px " + borderValue + "px;" +
+											"}");
+				
+				DOM.insertChild(mainPanel.getElement(), borderStyle, 0);
+			}
+		}
+		
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -294,7 +299,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		return dayofWeek;
 	}
 
-	@Override
 	public void onDataInit(RWEventCollection returnedEvents) {
 		ArrayList<RWEventItem> eventList = returnedEvents.allEvents();
 		for(Iterator<RWEventItem> it = eventList.iterator(); it.hasNext();)
@@ -382,7 +386,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 		return gridCoord;
 	}
 	
-	@Override
 	public void onDataError(String errMsg) {
 		// TODO Auto-generated method stub
 
@@ -537,7 +540,6 @@ public class RWDynamicCalendar extends Composite implements RWCalendarDataListen
 			}
 		}
 
-		@Override
 		public void onClick(ClickEvent event) {
 			// TODO Auto-generated method stub
 			detailHelper.onDisplayDay(eventList);

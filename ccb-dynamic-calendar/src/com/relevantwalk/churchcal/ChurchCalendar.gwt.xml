@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.6.4//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.6.4/distro-source/core/src/gwt-module.dtd">
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
 <module rename-to='churchcalendar'>
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
   <inherits name='com.google.gwt.http.HTTP'/>
   <inherits name ="com.google.gwt.xml.XML"/>
+  <inherits name ="com.relevantwalk.churchcaldata.churchcaldata"/>
   <entry-point class='com.relevantwalk.churchcal.client.ChurchCalendar'/>
 </module>

@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.relevantwalk.churchcaldata.client.RWEventItem;
 
 public class RWEventLink extends Composite implements ClickHandler{
 	private ArrayList<RWEventLinkListener> listeners = new ArrayList<RWEventLinkListener>();
@@ -71,7 +72,6 @@ public class RWEventLink extends Composite implements ClickHandler{
 		listeners.remove(listener);
 	}
 
-	@Override
 	public void onClick(ClickEvent event) {
 		//not sure multiple listeners makes sense
 		for(Iterator<RWEventLinkListener> it = listeners.iterator(); it.hasNext();)
